@@ -1,14 +1,17 @@
+package ru.yandex.praktikum.taskTypes;
+
+import ru.yandex.praktikum.statuses.Statuses;
 import java.util.ArrayList;
 
 public class Epic extends Task {
 
     private ArrayList<Integer> subTaskList = new ArrayList<>();
 
-    public Epic(String title, String description, int id, String status) {
+    public Epic(String title, String description, int id, Statuses status) {
         super(title, description, id, status);
     }
 
-    public Epic(String title, String description, String status) {
+    public Epic(String title, String description, Statuses status) {
         super(title, description, status);
     }
 
