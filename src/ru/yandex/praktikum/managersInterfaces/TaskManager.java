@@ -27,4 +27,5 @@ public interface TaskManager {
     void deleteAllTasks();
     void deleteAllSubTasks();
     void deleteAllEpics();
+    List<Task> getHistory();
 }

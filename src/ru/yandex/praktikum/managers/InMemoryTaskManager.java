@@ -22,7 +22,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int counter = 1;
 
-    public int getNextId() {
+    private int getNextId() {
         return counter++;
     }
 
@@ -174,11 +174,12 @@ public class InMemoryTaskManager implements TaskManager {
         deleteAllSubTasks();
     }
 
-    public List<Task> viewHistory() {
+    @Override
+    public List<Task> getHistory() {
        return historyManager.getHistory();
     }
 
-    public void checkEpicStatus(Epic epic) {
+    private void checkEpicStatus(Epic epic) {
 
         if (epic != null) {
 
