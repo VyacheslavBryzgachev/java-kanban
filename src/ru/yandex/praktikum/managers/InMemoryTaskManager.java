@@ -22,10 +22,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int counter = 1;
 
-    private int getNextId() {
-        return counter++;
-    }
-
     @Override
     public int getCounter() {
         return counter;
@@ -61,14 +57,17 @@ public class InMemoryTaskManager implements TaskManager {
        return new ArrayList<>(taskHashMap.values());
     }
 
+    @Override
     public List<SubTask> getListOfAllSubTasks() {
         return new ArrayList<>(subTaskHashMap.values());
     }
 
+    @Override
     public List<Epic> getListOfAllEpics() {
         return new ArrayList<>(epicHashMap.values());
     }
 
+    @Override
     public Task getTaskById(int id) {
         Task task = taskHashMap.get(id);
         historyManager.add(task);
@@ -179,8 +178,11 @@ public class InMemoryTaskManager implements TaskManager {
        return historyManager.getHistory();
     }
 
-    private void checkEpicStatus(Epic epic) {
+    private int getNextId() {
+        return counter++;
+    }
 
+    private void checkEpicStatus(Epic epic) {
         if (epic != null) {
 
         boolean allNew = false;
