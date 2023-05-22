@@ -14,13 +14,21 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    HistoryManager historyManager = Managers.getDefaultHistory();
+    HistoryManager historyManager;
 
     Map<Integer, Task> taskHashMap = new HashMap<>();
     Map<Integer, SubTask> subTaskHashMap = new HashMap<>();
     Map<Integer, Epic> epicHashMap = new HashMap<>();
 
     private int counter = 1;
+
+    public InMemoryTaskManager(HistoryManager historyManager) {
+        this.historyManager = historyManager;
+    }
+
+    public InMemoryTaskManager() {
+       this.historyManager = Managers.getDefaultHistory();
+    }
 
     @Override
     public int getCounter() {
@@ -90,11 +98,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task upgradeTask(Task task) {
-        if (taskHashMap.containsKey(task.getId())) {
-           return taskHashMap.put(task.getId(), task);
-
-        } else
-                return null;
+        Task task1 = taskHashMap.get(task.getId());
+        if (task1 == null) {
+            return null;
+        }
+        return taskHashMap.put(task.getId(), task);
     }
 
     @Override
@@ -110,13 +118,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic upgradeEpic(Epic epic) {
-        if (epicHashMap.containsKey(epic.getId())) {
-            Epic epicToChange = epicHashMap.get(epic.getId());
-            epicToChange.setTitle(epic.getTitle());
-            epicToChange.setDescription(epic.getDescription());
-            return epic;
-        } else
-                return null;
+        Epic epicToChange = epicHashMap.get(epic.getId());
+        if (epicToChange == null) {
+            return null;
+        }
+        epicToChange.setTitle(epic.getTitle());
+        epicToChange.setDescription(epic.getDescription());
+        return epic;
     }
 
     @Override
