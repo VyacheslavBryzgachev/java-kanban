@@ -5,7 +5,7 @@ import ru.yandex.praktikum.managersInterfaces.TaskManager;
 
 public class Managers  <T extends TaskManager> {
 
-    public TaskManager getDefault() {
+    public static TaskManager getDefault() {
         return new InMemoryTaskManager();
     }
 
