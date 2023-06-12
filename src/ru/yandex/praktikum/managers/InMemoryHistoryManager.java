@@ -30,7 +30,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        removeNode(receivedTasks.get(id));
+        removeNode(receivedTasks.remove(id));
     }
 
     private void linkTask(Task task) {
