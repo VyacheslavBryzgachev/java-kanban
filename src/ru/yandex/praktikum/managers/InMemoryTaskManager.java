@@ -183,7 +183,6 @@ public class InMemoryTaskManager implements TaskManager {
             epic.deleteAllSubTasksFromList();
             checkEpicStatus(epic);
         }
-
     }
 
     @Override
