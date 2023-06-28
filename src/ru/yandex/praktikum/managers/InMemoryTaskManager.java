@@ -29,7 +29,9 @@ public class InMemoryTaskManager implements TaskManager {
     public InMemoryTaskManager() {
        this.historyManager = Managers.getDefaultHistory();
     }
-
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
     @Override
     public int getCounter() {
         return counter;
