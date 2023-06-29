@@ -62,7 +62,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 for (SubTask subTask : fileBackedTasksManager.subTaskHashMap.values()) {
                     int id = subTask.getEpicId();
                     Epic epic = fileBackedTasksManager.getEpicById(id);
-                    epic.addSubTaskToList(id);
+                    epic.addSubTaskToList(subTask.getId());
                 }
 
             fileBackedTasksManager.setCounter(maxId + 1);
@@ -259,14 +259,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             Epic epic = new Epic(id, type, name, description, status);
             fileBackedTasksManager.epicHashMap.put(id, epic);
         }
-
-        int id = Integer.parseInt(parts[0]);
-        TaskTypes type = TaskTypes.valueOf(parts[1]);
-        String name = parts[2];
-        String description = parts[3];
-        Statuses status = Statuses.valueOf(parts[4].trim());
-        Task task = new Task(id, type, name, description, status);
-        fileBackedTasksManager.taskHashMap.put(id, task);
+        else {
+            int id = Integer.parseInt(parts[0]);
+            TaskTypes type = TaskTypes.valueOf(parts[1]);
+            String name = parts[2];
+            String description = parts[3];
+            Statuses status = Statuses.valueOf(parts[4].trim());
+            Task task = new Task(id, type, name, description, status);
+            fileBackedTasksManager.taskHashMap.put(id, task);
+        }
     }
     private static String historyToString(HistoryManager manager) {
         List<String> s = new ArrayList<>();
