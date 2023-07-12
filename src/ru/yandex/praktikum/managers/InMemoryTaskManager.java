@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -24,6 +25,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
+    }
+
+    public TreeSet<Task> getPrioritizedTasks() {
+        getListOfAllTasks();
+        getListOfAllSubTasks();
+        getListOfAllEpics();
+        TreeSet<Task> taskTreeSet = new TreeSet<>();
+        taskTreeSet.addAll(getListOfAllTasks());
+        taskTreeSet.addAll(getListOfAllSubTasks());
+        taskTreeSet.addAll(getListOfAllEpics());
+        return taskTreeSet;
     }
 
     public InMemoryTaskManager() {

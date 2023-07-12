@@ -13,14 +13,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private File file;
+
     public FileBackedTasksManager(File file) {
         this.file = file;
     }
+
     public static FileBackedTasksManager loadFromFile(File file) {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
         String path;
@@ -198,7 +201,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     private void save() {
         try {
             Writer writer = new FileWriter(file);
-            writer.write("id,type,name,status,description,epicId" + "\n");
+            writer.write("id,type,name,status,description,startTime,duration,epicId" + "\n");
 
             List<Task> allTasks = new ArrayList<>();
             allTasks.addAll(super.getListOfAllTasks());
@@ -231,6 +234,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         sb.append(task.getDescription());
         sb.append(",");
         sb.append(task.getStatus());
+        sb.append(",");
+        sb.append(task.getStartTime());
+        sb.append(",");
+        sb.append(task.getDuration());
+
         if(task.getTaskType() == TaskTypes.SUB_TASK) {
             SubTask subTask = subTaskHashMap.get(task.getId());
             sb.append(",");
@@ -247,8 +255,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             String name = parts[2];
             String description = parts[3];
             Statuses status = Statuses.valueOf(parts[4]);
-            int epicId = Integer.parseInt(parts[5]);
-            SubTask subTask =  new SubTask(id, type, name, description, status, epicId);
+            LocalDateTime startTime = LocalDateTime.parse(parts[5]);
+            int duration = Integer.parseInt(parts[6]);
+            int epicId = Integer.parseInt(parts[7]);
+            SubTask subTask =  new SubTask(id, type, name, description, status, startTime, duration, epicId);
             fileBackedTasksManager.taskHashMap.put(id, subTask);
         } else if (parts[1].contains(TaskTypes.EPIC.toString())) {
             int id = Integer.parseInt(parts[0]);
@@ -256,7 +266,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             String name = parts[2];
             String description = parts[3];
             Statuses status = Statuses.valueOf(parts[4]);
-            Epic epic = new Epic(id, type, name, description, status);
+            LocalDateTime startTime = LocalDateTime.parse(parts[5]);
+            int duration = Integer.parseInt(parts[6]);
+            Epic epic = new Epic(id, type, name, description, status, startTime, duration);
             fileBackedTasksManager.epicHashMap.put(id, epic);
         }
         else {
@@ -265,7 +277,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             String name = parts[2];
             String description = parts[3];
             Statuses status = Statuses.valueOf(parts[4].trim());
-            Task task = new Task(id, type, name, description, status);
+            LocalDateTime startTime = LocalDateTime.parse(parts[5]);
+            int duration = Integer.parseInt(parts[6]);
+            Task task = new Task(id, type, name, description, status, startTime, duration);
             fileBackedTasksManager.taskHashMap.put(id, task);
         }
     }
