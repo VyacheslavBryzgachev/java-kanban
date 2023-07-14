@@ -1,5 +1,6 @@
 package ru.yandex.praktikum.managers;
 
+import ru.yandex.praktikum.exceptions.TimeCrossException;
 import ru.yandex.praktikum.managersInterfaces.HistoryManager;
 import ru.yandex.praktikum.managersInterfaces.TaskManager;
 import ru.yandex.praktikum.statuses.Statuses;
@@ -236,6 +237,8 @@ public class InMemoryTaskManager implements TaskManager {
         if(!checkTasks(task)) {
             prioritizedTasks.add(task);
         }
+        else
+            throw new TimeCrossException("Есть совпадения по времени");
     }
 
     private boolean checkTasks(Task task) {
