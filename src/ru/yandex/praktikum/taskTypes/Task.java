@@ -107,7 +107,7 @@ public class Task implements Comparable<Task> {
 
     @Override
     public int compareTo(Task o) {
-        if (o.getStartTime() != null) {
+        if (o.getStartTime() != null && this.startTime != null) {
             return this.startTime.compareTo(o.getStartTime());
         }
         return 0;

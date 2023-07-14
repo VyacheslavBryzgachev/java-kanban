@@ -1,6 +1,7 @@
 package ru.yandex.praktikum.tests;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.praktikum.managers.InMemoryTaskManager;
 import ru.yandex.praktikum.managersInterfaces.TaskManager;
 import ru.yandex.praktikum.statuses.Statuses;
 import ru.yandex.praktikum.taskTypes.Epic;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TaskManagerTest <T extends TaskManager> {
 
-    T manager;
+    InMemoryTaskManager manager = new InMemoryTaskManager();
 
     @Test
     public void createAndGetByIdTaskTest() {
@@ -32,8 +33,7 @@ public class TaskManagerTest <T extends TaskManager> {
 
     @Test
     public void createAndGetByIdSubTaskTest() {
-        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW,
-                LocalDateTime.of(2023, 10, 11, 21, 50), 60 );
+        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW);
         SubTask subTask = new SubTask(TaskTypes.SUB_TASK, "SubTask", "SubTaskDesc", Statuses.NEW,
                 LocalDateTime.of(2023, 10, 11, 21, 50), 60, 1);
         manager.createEpic(epic);
@@ -43,8 +43,7 @@ public class TaskManagerTest <T extends TaskManager> {
 
     @Test
     public void createAndGetByIdEpicTest() {
-        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW,
-                LocalDateTime.of(2023, 10, 11, 21, 50), 60);
+        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW);
         manager.createEpic(epic);
         assertEquals(epic, manager.getEpicById(epic.getId()));
     }
@@ -80,8 +79,7 @@ public class TaskManagerTest <T extends TaskManager> {
 
     @Test
     public void shouldNotEmptyListOfAllSubTasksTest() {
-        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW,
-                LocalDateTime.of(2023, 10, 11, 21, 50), 60 );
+        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW);
         SubTask subTask1 = new SubTask(TaskTypes.SUB_TASK, "SubTask1", "SubTaskDesc1", Statuses.NEW,
                 LocalDateTime.of(2023, 10, 11, 21, 50), 60, 1);
         SubTask subTask2 = new SubTask(TaskTypes.SUB_TASK, "SubTask2", "SubTaskDesc2", Statuses.NEW,
@@ -142,8 +140,7 @@ public class TaskManagerTest <T extends TaskManager> {
 
     @Test
     public void subTaskCanUpgradedTest() {
-        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW,
-                LocalDateTime.of(2023, 10, 11, 21, 50), 60 );
+        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW);
         SubTask subTask = new SubTask(TaskTypes.SUB_TASK, "Sub", "Desc", Statuses.NEW,
                 LocalDateTime.of(2023, 10, 11, 21, 50), 60, 1);
         manager.createEpic(epic);
@@ -162,18 +159,15 @@ public class TaskManagerTest <T extends TaskManager> {
 
     @Test
     public void epicCanUpgradedTest() {
-        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW,
-                LocalDateTime.of(2023, 10, 11, 21, 50), 60 );
+        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW);
         manager.createEpic(epic);
-        Epic upgrade = new Epic(1, TaskTypes.EPIC, "UpEpic", "UpEpicDesc", Statuses.NEW,
-                LocalDateTime.of(2023, 10, 11, 21, 50), 60);
+        Epic upgrade = new Epic(1, TaskTypes.EPIC, "UpEpic", "UpEpicDesc", Statuses.NEW);
         assertEquals(upgrade, manager.upgradeEpic(upgrade));
     }
 
     @Test
     public void returnNullIfEpicNotUpgradedTest() {
-        Epic upgrade = new Epic(1, TaskTypes.EPIC, "UpEpic", "UpEpicDesc", Statuses.NEW,
-                LocalDateTime.of(2023, 10, 11, 21, 50), 60 );
+        Epic upgrade = new Epic(1, TaskTypes.EPIC, "UpEpic", "UpEpicDesc", Statuses.NEW);
         assertNull(manager.upgradeEpic(upgrade));
     }
 
@@ -188,8 +182,7 @@ public class TaskManagerTest <T extends TaskManager> {
 
     @Test
     public void createAndDeleteOneSubTaskTest() {
-        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW,
-                LocalDateTime.of(2023, 10, 11, 21, 50), 60 );
+        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW);
         SubTask subTask = new SubTask(TaskTypes.SUB_TASK, "Sub", "Desc", Statuses.NEW,
                 LocalDateTime.of(2023, 10, 11, 21, 50), 60, 1);
         manager.createEpic(epic);
@@ -201,8 +194,7 @@ public class TaskManagerTest <T extends TaskManager> {
 
     @Test
     public void createAndDeleteOneEpicTest() {
-        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW,
-                LocalDateTime.of(2023, 10, 11, 21, 50), 60 );
+        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW);
         manager.createEpic(epic);
         manager.deleteEpicById(epic.getId());
         assertTrue(manager.getListOfAllEpics().isEmpty());
@@ -225,7 +217,7 @@ public class TaskManagerTest <T extends TaskManager> {
 
     @Test
     public void createAndDeleteAllSubTasksTest() {
-        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW, LocalDateTime.of(2023, 10, 11, 21, 50), 60 );
+        Epic epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW);
         SubTask subTask1 = new SubTask(TaskTypes.SUB_TASK, "Sub1", "Desc1", Statuses.NEW,
                 LocalDateTime.of(2023, 10, 11, 21, 50), 60, 1);
         SubTask subTask2 = new SubTask(TaskTypes.SUB_TASK, "Sub2", "Desc2", Statuses.NEW,
@@ -242,10 +234,8 @@ public class TaskManagerTest <T extends TaskManager> {
 
     @Test
     public void createAndDeleteAllEpicsAndSubTasksTest() {
-        Epic epic1 = new Epic(TaskTypes.EPIC, "Epic1", "EpicDesc1", Statuses.NEW,
-                LocalDateTime.of(2023, 10, 11, 21, 50), 60 );
-        Epic epic2 = new Epic(TaskTypes.EPIC, "Epic2", "EpicDesc2", Statuses.NEW,
-                LocalDateTime.of(2023, 10, 11, 21, 50), 60 );
+        Epic epic1 = new Epic(TaskTypes.EPIC, "Epic1", "EpicDesc1", Statuses.NEW);
+        Epic epic2 = new Epic(TaskTypes.EPIC, "Epic2", "EpicDesc2", Statuses.NEW);
         SubTask subTask1 = new SubTask(TaskTypes.SUB_TASK, "Sub1", "Desc1", Statuses.NEW,
                 LocalDateTime.of(2023, 10, 11, 21, 50), 60, 1);
         SubTask subTask2 = new SubTask(TaskTypes.SUB_TASK, "Sub2", "Desc2", Statuses.NEW,

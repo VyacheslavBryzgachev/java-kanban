@@ -21,8 +21,7 @@ public class EpicTests {
 
     @BeforeEach
     public void createEpic() {
-        epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW,
-                LocalDateTime.of(2023, 10, 11, 21, 50), 60 );
+        epic = new Epic(TaskTypes.EPIC, "Epic", "EpicDesc", Statuses.NEW);
     }
 
     @Test

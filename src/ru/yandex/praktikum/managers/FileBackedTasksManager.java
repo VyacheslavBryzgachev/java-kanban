@@ -223,6 +223,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             throw new ManagerSaveException("Ошибка записи в файл!");
         }
     }
+
     private String toString(Task task) {
         StringBuilder sb = new StringBuilder();
         sb.append(task.getId());
@@ -247,6 +248,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         sb.append('\n');
         return sb.toString();
     }
+
     private void fromString(String value, FileBackedTasksManager fileBackedTasksManager) {
         String[] parts = value.split(", ");
         if(parts[1].contains(TaskTypes.SUB_TASK.toString())) {
@@ -266,9 +268,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             String name = parts[2];
             String description = parts[3];
             Statuses status = Statuses.valueOf(parts[4]);
-            LocalDateTime startTime = LocalDateTime.parse(parts[5]);
-            int duration = Integer.parseInt(parts[6]);
-            Epic epic = new Epic(id, type, name, description, status, startTime, duration);
+            Epic epic = new Epic(id, type, name, description, status);
             fileBackedTasksManager.epicHashMap.put(id, epic);
         }
         else {
@@ -283,6 +283,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             fileBackedTasksManager.taskHashMap.put(id, task);
         }
     }
+
     private static String historyToString(HistoryManager manager) {
         List<String> s = new ArrayList<>();
         for (Task task : manager.getHistory()) {
@@ -290,6 +291,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
         return String.join(",", s);
     }
+
     private static List<Integer> historyFromString(String value) {
         String[] idsString = value.split(",");
         List<Integer> tasksId = new ArrayList<>();

@@ -2,22 +2,14 @@ package ru.yandex.praktikum.taskTypes;
 
 import ru.yandex.praktikum.statuses.Statuses;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Epic extends Task {
     private List<Integer> subTaskList = new ArrayList<>();
     private LocalDateTime endTime;
-
-    public Epic(int id, TaskTypes taskType, String title, String description, Statuses status, LocalDateTime startTime, int durationMinutes) {
-        super(id, taskType, title, description, status, startTime, durationMinutes);
-    }
-
-    public Epic(TaskTypes taskType, String title, String description, Statuses status, LocalDateTime startTime, int durationMinutes) {
-        super(taskType, title, description, status, startTime, durationMinutes);
-    }
 
     public Epic(int id, TaskTypes taskType, String title, String description, Statuses status) {
         super(id, taskType, title, description, status);
@@ -27,32 +19,34 @@ public class Epic extends Task {
         super(taskType, title, description, status);
     }
 
-    public LocalDateTime getEndTime(Epic epic) {
+    public void calculateStartAndEndEpicTime(ArrayList<SubTask> subTasks) {
         if (subTaskList.isEmpty()) {
-            return null;
+            return;
         }
-        return endTime;
+
+        LocalDateTime epicsStartTime = subTasks.stream()
+                .map(SubTask::getStartTime)
+                .filter(Objects::nonNull)
+                .max(LocalDateTime::compareTo)
+                .orElse(LocalDateTime.MIN);
+
+        LocalDateTime epicEndTime = subTasks.stream()
+                .map(SubTask::getEndTime)
+                .filter(Objects::nonNull)
+                .max(LocalDateTime::compareTo)
+                .orElse(LocalDateTime.MIN);
+
+        if (epicEndTime != LocalDateTime.MIN && epicsStartTime != LocalDateTime.MAX) {
+            endTime = epicEndTime;
+            startTime = epicsStartTime;
+            duration = subTasks.stream()
+                    .mapToInt(subTask -> getDuration())
+                    .sum();
+        }
     }
 
-    public void calculateStartAndEndEpicTime(ArrayList<SubTask> subTasks) {
-        LocalDateTime epicsStartTime = LocalDateTime.MIN;
-        LocalDateTime epicEndTime = LocalDateTime.MIN;
-        for(SubTask subTask : subTasks) {
-            LocalDateTime subTaskStartTime = subTask.getStartTime();
-            LocalDateTime subTaskEndTime = subTask.getEndTime();
-            if(subTaskEndTime != null && subTaskStartTime != null) {
-                if(subTaskStartTime.isAfter(epicsStartTime)) {
-                    epicsStartTime = subTaskStartTime;
-                }
-                if(subTaskEndTime.isAfter(epicEndTime)) {
-                    epicEndTime = subTaskEndTime;
-                }
-                endTime = epicEndTime;
-                startTime = epicsStartTime;
-                Duration d  = Duration.between(startTime, endTime);
-                duration = (int) d.toMinutes();
-            }
-        }
+    public LocalDateTime getEndTime(Epic epic) {
+        return endTime;
     }
 
     public List<Integer> getSubTaskList() {
