@@ -110,6 +110,12 @@ public class Task implements Comparable<Task> {
         if (o.getStartTime() != null && this.startTime != null) {
             return this.startTime.compareTo(o.getStartTime());
         }
-        return 0;
+        else if (o.getStartTime() != null && this.startTime == null) {
+                return 1;
+        } else if (o.getStartTime() == null && this.startTime != null) {
+                return -1;
+        } else {
+                return 0;
+            }
+        }
     }
-}

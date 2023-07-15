@@ -28,7 +28,7 @@ public class Epic extends Task {
                 .map(SubTask::getStartTime)
                 .filter(Objects::nonNull)
                 .max(LocalDateTime::compareTo)
-                .orElse(LocalDateTime.MIN);
+                .orElse(LocalDateTime.MAX);
 
         LocalDateTime epicEndTime = subTasks.stream()
                 .map(SubTask::getEndTime)
