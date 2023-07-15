@@ -138,14 +138,14 @@ public class InMemoryTaskManager implements TaskManager {
         final SubTask subT = subTaskHashMap.get(subTask.getId());
         Epic epic = getEpicById(subTask.getEpicId());
         if (epic != null && epic.getSubTaskList().contains(subTask.getId())) {
-            subTaskHashMap.put(subTask.getId(), subTask);
-            checkEpicStatus(epic);
             getPrioritizedTasks().remove(subT);
             if (checkTasks(subTask)) {
                 addToPrioritizedTasks(subTask);
+                subTaskHashMap.put(subTask.getId(), subTask);
+                checkEpicStatus(epic);
+                epic.calculateStartAndEndEpicTime(getAllEpicSubTasks(epic));
             } else {
                 addToPrioritizedTasks(subT);
-                epic.calculateStartAndEndEpicTime(getAllEpicSubTasks(epic));
                 return null;
             }
         }
