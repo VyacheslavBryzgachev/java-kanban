@@ -24,6 +24,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.file = file;
     }
 
+    public FileBackedTasksManager() {
+    }
+
     public static FileBackedTasksManager loadFromFile(File file) {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
         String path;
@@ -71,6 +74,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             fileBackedTasksManager.setCounter(maxId + 1);
             return fileBackedTasksManager;
     }
+
     @Override
     public Task createTask(Task task) {
         Task createdTask = super.createTask(task);
@@ -196,6 +200,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public void deleteAllEpics() {
         super.deleteAllEpics();
         save();
+    }
+
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks);
     }
 
     private void save() {

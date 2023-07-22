@@ -6,7 +6,7 @@ import ru.yandex.praktikum.managersInterfaces.TaskManager;
 public class Managers  <T extends TaskManager> {
 
     public static TaskManager getDefault() {
-        return new InMemoryTaskManager();
+        return new HttpTaskManager();
     }
 
     public static HistoryManager getDefaultHistory() {
