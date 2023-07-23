@@ -42,7 +42,7 @@ public class HttpTaskServer {
 
     public void startServer() throws IOException {
         HttpServer httpServer = HttpServer.create();
-        httpServer.bind(new InetSocketAddress(port), 0);
+        httpServer.bind(new InetSocketAddress("localhost", port), 0);
         httpServer.createContext("/tasks", new AllTaskHandler());
         httpServer.start();
     }

@@ -41,29 +41,57 @@ public class HttpTaskManager extends FileBackedTasksManager{
     }
 
     public void load() {
+        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
+        int maxId = 0;
+
         String jsonPrioritizedTasks = getClient().load("tasks");
         var prioritizedTaskType = new TypeToken<List<Task>>(){}.getType();
         List<Task> prioritizedTasks = gson.fromJson(jsonPrioritizedTasks, prioritizedTaskType);
-        getPrioritizedTasks().addAll(prioritizedTasks);
+        inMemoryTaskManager.prioritizedTasks.addAll(prioritizedTasks);
 
         String jsonHistory = getClient().load("tasks/history");
         var historyType = new TypeToken<List<Task>>(){}.getType();
         List<Task> history = gson.fromJson(jsonHistory, historyType);
-        getHistory().addAll(history);
+        for(Task task : history) {
+            inMemoryTaskManager.historyManager.add(task);
+        }
 
         String jsonTasks = getClient().load("tasks/task");
         var taskType = new TypeToken<List<Task>>(){}.getType();
         List<Task> tasks = gson.fromJson(jsonTasks, taskType);
-        getListOfAllTasks().addAll(tasks);
+        for (Task task : tasks) {
+            int taskId = task.getId();
+            inMemoryTaskManager.taskHashMap.put(taskId, task);
+            if(maxId < taskId) {
+                maxId = taskId;
+            }
+        }
 
         String jsonSubTasks = getClient().load("tasks/subtask");
         var subTaskType = new TypeToken<List<SubTask>>(){}.getType();
         List<SubTask> subTasks = gson.fromJson(jsonSubTasks, subTaskType);
-        getListOfAllSubTasks().addAll(subTasks);
+        for(SubTask subTask : subTasks) {
+            int subTaskId = subTask.getId();
+            int subTaskEpicId = subTask.getEpicId();
+            inMemoryTaskManager.subTaskHashMap.put(subTaskId, subTask);
+            Epic epic = inMemoryTaskManager.getEpicById(subTaskEpicId);
+            epic.addSubTaskToList(subTaskId);
+            if(maxId < subTaskId) {
+                maxId = subTaskId;
+            }
+        }
 
         String jsonEpics = getClient().load("tasks/epic");
         var epicType = new TypeToken<List<Epic>>(){}.getType();
         List<Epic> epics = gson.fromJson(jsonEpics, epicType);
-        getListOfAllEpics().addAll(epics);
+        for(Epic epic : epics) {
+            int epicId = epic.getId();
+            inMemoryTaskManager.epicHashMap.put(epicId, epic);
+            if(maxId < epicId) {
+                maxId = epicId;
+            }
+        }
+
+        inMemoryTaskManager.setCounter(maxId + 1);
     }
 }
